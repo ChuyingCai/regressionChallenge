@@ -192,12 +192,17 @@ the StressSurvey instead of Stress is used.
 ```{python}
 #| label: bivariate-regression-stresssurvey-subset
 #| echo: false
+#| warning: false
 #| fig-cap: "Regression of Anxiety on StressSurvey with Time held at 2.0"
+import warnings
+
 import statsmodels.formula.api as smf
 
 time2_df = observDF[observDF["Time"] == 2.0].copy()
-model = smf.ols('Anxiety ~ StressSurvey', data=time2_df).fit()
-print(model.summary())
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    model = smf.ols("Anxiety ~ StressSurvey", data=time2_df).fit()
+    print(model.summary())
 print(f"Coefficient on StressSurvey: {model.params['StressSurvey']:.3f}")
 print(f"Intercept: {model.params['Intercept']:.3f}")
 print(f"P-value for intercept: {model.pvalues['Intercept']:.3f}")
